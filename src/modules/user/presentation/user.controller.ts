@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, UsePipes, ValidationPipe } from "@nestjs/common";
 import { CreateUserUseCase } from "../application/create-user.usecase";
 import { UserRepository } from "../infrastructure/user.repository";
 import { User } from "../domain/user.entity";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { UpdateUserDto } from "../dto/update-user.dto";
 
 @Controller('users')
 export class UserController {
@@ -16,8 +18,17 @@ export class UserController {
   }
 
   @Post()
-  async postUser(@Body() body: { name: string, email: string, password: string }): Promise<User> {
-    const { name, email, password } = body;
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async postUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const { name, email, password } = createUserDto;
     return this.createUserUseCase.execute(name, email, password);
+  }
+
+  @Patch(':id')
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ): Promise<User | null> {
+    return this.userRepository.update(id, updateUserDto);
   }
 }
