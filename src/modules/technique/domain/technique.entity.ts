@@ -12,6 +12,9 @@ export class Technique {
   @Column({ nullable: false })
   description: string;
 
+  @Column({ type: 'enum', enum: ['SUBMISSION', 'SWEEP', 'TAKEDOWN', 'GUARD'] })
+  type: string;
+
   @Column({ type: 'enum', enum: ['BASIC', 'INTERMEDIATE', 'ADVANCED'], default: 'BASIC' })
   difficulty: string;
 
