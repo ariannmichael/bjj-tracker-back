@@ -17,7 +17,7 @@ export class TrainingSession {
   duration: number; // in minutes
 
   @Column()
-  notes: string[];
+  note: string;
 
   @ManyToMany(() => Technique)
   @JoinTable()

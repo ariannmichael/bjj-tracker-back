@@ -1,4 +1,4 @@
-import { TrainingSession } from "src/modules/training-session/domain/training-session.entity";
+import { TrainingSession } from "src/modules/training/domain/training-session.entity";
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

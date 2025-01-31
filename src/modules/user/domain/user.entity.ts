@@ -1,5 +1,5 @@
-import { BeltProgress } from "src/modules/belt-progress/domain/belt-progress.entity";
-import { TrainingSession } from "src/modules/training-session/domain/training-session.entity";
+import { BeltProgress } from "src/modules/belt/domain/belt-progress.entity";
+import { TrainingSession } from "src/modules/training/domain/training-session.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

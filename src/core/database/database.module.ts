@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
-import { typeOrmConfig } from './ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppDataSource } from './data-source';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig)],
+  imports: [TypeOrmModule.forRootAsync({
+    useFactory: async () => ({
+      ...AppDataSource.options,
+    })
+  })],
 })
 export class DatabaseModule {}
