@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Patch, Post, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Request, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { CreateUserUseCase } from "../application/create-user.usecase";
 import { UserRepository } from "../infrastructure/user.repository";
 import { User } from "../domain/user.entity";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UpdateUserDto } from "../dto/update-user.dto";
+import { JwtAuthGuard } from "src/modules/auth/jwt-auth.guard";
 
 @Controller('users')
 export class UserController {
@@ -13,6 +14,7 @@ export class UserController {
   ) {}
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async getUser(@Param('id') id: string): Promise<User | null> {
     return this.userRepository.findById(id);
   }
@@ -30,5 +32,11 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto
   ): Promise<User | null> {
     return this.userRepository.update(id, updateUserDto);
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  async getProfile(@Request() req) {
+    return req.user;
   }
 }

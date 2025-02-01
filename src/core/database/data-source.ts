@@ -3,6 +3,7 @@ import { User } from '../../modules/user/domain/user.entity';
 import { TrainingSession } from '../../modules/training/domain/training-session.entity';
 import { Technique } from '../../modules/technique/domain/technique.entity';
 import { BeltProgress } from '../../modules/belt/domain/belt-progress.entity';
+import 'dotenv/config';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
