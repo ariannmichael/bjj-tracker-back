@@ -5,6 +5,7 @@ import (
 	application_user "bjj-tracker/src/modules/user/application"
 	infrastructure_user "bjj-tracker/src/modules/user/infrastructure"
 
+	"net/http"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,15 +29,15 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		Password string `json:"password" binding:"required,min=6"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	user, err := h.CreateUserUC.Execute(req.Name, req.Email, req.Password)
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(201, gin.H{"user": user})
+	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
