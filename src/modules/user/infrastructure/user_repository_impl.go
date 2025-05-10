@@ -2,7 +2,9 @@ package infrastructure_user
 
 import (
 	domain_user "bjj-tracker/src/modules/user/domain"
+	"fmt"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -15,16 +17,25 @@ var _ domain_user.UserRepository = &UserRepositoryImpl{}
 func (r *UserRepositoryImpl) Create(user *domain_user.User) (*domain_user.User, error) {
 	var existingUser domain_user.User
 	if err := r.DB.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
-		panic("user already exists")
+		return nil, fmt.Errorf("user with email %s already exists", user.Email)
 	}
 
+	// Generate UUID for new user
+	user.ID = uuid.New().String()
+
 	if err := r.DB.Create(user).Error; err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to create user: %w", err)
 	}
 	return user, nil
 }
 
-// FindByEmail implements domain_user.UserRepository.
 func (r *UserRepositoryImpl) FindByEmail(email string) (*domain_user.User, error) {
 	panic("unimplemented")
+}
+
+func (r *UserRepositoryImpl) Update(user *domain_user.User) (*domain_user.User, error) {
+	if err := r.DB.Save(user).Error; err != nil {
+		return nil, fmt.Errorf("failed to update user: %w", err)
+	}
+	return user, nil
 }
