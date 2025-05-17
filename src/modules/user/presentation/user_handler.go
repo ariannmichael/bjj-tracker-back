@@ -3,6 +3,7 @@ package presentation_user
 import (
 	application_user "bjj-tracker/src/modules/user/application"
 
+	"net/http"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,15 +27,15 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		BeltStripe int    `json:"belt_stripe" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	user, err := h.CreateUserUC.Execute(req)
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(201, gin.H{"user": user})
+	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
