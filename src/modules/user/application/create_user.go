@@ -39,12 +39,12 @@ func (uc *CreateUserUseCase) Execute(req CreateUserRequest) (*domain_user.User, 
 
 	user, err := uc.UserService.CreateUser(&req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create user: %w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
 
 	newUser, err := uc.UserService.AddBeltProgress(user, &req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to add belt progress: %w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
 	if newUser == nil {
 		return nil, fmt.Errorf("failed to add belt progress: user is nil")

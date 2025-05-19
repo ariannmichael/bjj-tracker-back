@@ -24,13 +24,17 @@ func (r *UserRepositoryImpl) Create(user *domain_user.User) (*domain_user.User, 
 	user.ID = uuid.New().String()
 
 	if err := r.DB.Create(user).Error; err != nil {
-		return nil, fmt.Errorf("failed to create user: %w", err)
+		return nil, fmt.Errorf("REPO failed to create user: %w", err)
 	}
 	return user, nil
 }
 
 func (r *UserRepositoryImpl) FindByEmail(email string) (*domain_user.User, error) {
-	panic("unimplemented")
+	var user domain_user.User
+	if err := r.DB.First(&user, "email = ?", email).Error; err != nil {
+		return nil, fmt.Errorf("REPO failed to find user: %w", err)
+	}
+	return &user, nil
 }
 
 func (r *UserRepositoryImpl) Update(user *domain_user.User) (*domain_user.User, error) {

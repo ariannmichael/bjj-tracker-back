@@ -21,13 +21,14 @@ func NewUserService(repo domain_user.UserRepository, beltService application_bel
 func (us *UserService) CreateUser(userDTO *CreateUserRequest) (*domain_user.User, error) {
 	user := domain_user.User{
 		Name:     userDTO.Name,
+		Username: userDTO.Username,
 		Email:    userDTO.Email,
 		Password: userDTO.Password,
 	}
 
 	newUser, err := us.Repo.Create(&user)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create user: %w", err)
+		return nil, fmt.Errorf("SERVICE failed to create user: %w", err)
 	}
 
 	return newUser, nil

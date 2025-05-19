@@ -17,7 +17,8 @@ func main() {
 	router := gin.Default()
 
 	createUserUC := application_user.NewCreateUserUseCase()
-	userHandler := presentation_user.NewUserHandler(createUserUC)
+	loginUserUC := application_user.NewLoginUserUseCase()
+	userHandler := presentation_user.NewUserHandler(createUserUC, loginUserUC)
 	apiGroup := router.Group("/api")
 	presentation_user.UserRoutes(apiGroup, userHandler)
 
