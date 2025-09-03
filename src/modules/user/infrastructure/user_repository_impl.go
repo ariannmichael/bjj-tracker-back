@@ -43,3 +43,19 @@ func (r *UserRepositoryImpl) Update(user *domain_user.User) (*domain_user.User, 
 	}
 	return user, nil
 }
+
+func (r *UserRepositoryImpl) FindByID(id string) (*domain_user.User, error) {
+	var user domain_user.User
+	if err := r.DB.First(&user, "id = ?", id).Error; err != nil {
+		return nil, fmt.Errorf("REPO failed to find user: %w", err)
+	}
+	return &user, nil
+}
+
+func (r *UserRepositoryImpl) FindAll() ([]domain_user.User, error) {
+	var users []domain_user.User
+	if err := r.DB.Find(&users).Error; err != nil {
+		return nil, fmt.Errorf("REPO failed to find all users: %w", err)
+	}
+	return users, nil
+}

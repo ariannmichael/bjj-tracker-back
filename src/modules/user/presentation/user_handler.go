@@ -10,14 +10,18 @@ import (
 )
 
 type UserHandler struct {
-	CreateUserUC *application_user.CreateUserUseCase
-	LoginUserUC  *application_user.LoginUserUseCase
+	CreateUserUC  *application_user.CreateUserUseCase
+	LoginUserUC   *application_user.LoginUserUseCase
+	GetUserByIDUC *application_user.GetUserByIDUseCase
+	GetAllUsersUC *application_user.GetAllUsersUseCase
 }
 
-func NewUserHandler(createUserUC *application_user.CreateUserUseCase, loginUserUC *application_user.LoginUserUseCase) *UserHandler {
+func NewUserHandler(createUserUC *application_user.CreateUserUseCase, loginUserUC *application_user.LoginUserUseCase, getUserByIDUC *application_user.GetUserByIDUseCase, getAllUsersUC *application_user.GetAllUsersUseCase) *UserHandler {
 	return &UserHandler{
-		CreateUserUC: createUserUC,
-		LoginUserUC:  loginUserUC,
+		CreateUserUC:  createUserUC,
+		LoginUserUC:   loginUserUC,
+		GetUserByIDUC: getUserByIDUC,
+		GetAllUsersUC: getAllUsersUC,
 	}
 }
 
@@ -78,4 +82,24 @@ func (h *UserHandler) Validate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "I'm logged in",
 	})
+}
+
+func (h *UserHandler) GetUserByID(c *gin.Context) {
+	userID := c.Param("id")
+	user, err := h.GetUserByIDUC.Execute(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"user": user})
+}
+
+func (h *UserHandler) GetAllUsers(c *gin.Context) {
+	println("Called")
+	users, err := h.GetAllUsersUC.Execute()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"users": users})
 }

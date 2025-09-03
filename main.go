@@ -18,7 +18,9 @@ func main() {
 
 	createUserUC := application_user.NewCreateUserUseCase()
 	loginUserUC := application_user.NewLoginUserUseCase()
-	userHandler := presentation_user.NewUserHandler(createUserUC, loginUserUC)
+	getUserByIDUC := application_user.NewGetUserByIDUseCase()
+	getAllUsersUC := application_user.NewGetAllUsersUseCase()
+	userHandler := presentation_user.NewUserHandler(createUserUC, loginUserUC, getUserByIDUC, getAllUsersUC)
 	apiGroup := router.Group("/api")
 	presentation_user.UserRoutes(apiGroup, userHandler)
 
