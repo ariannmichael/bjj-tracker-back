@@ -7,9 +7,11 @@ import (
 )
 
 type User struct {
-	ID               string                            `gorm:"primarykey"`
-	Name             string                            `json:"name" gorm:"not null"`
-	Username         string                            `json:"username" gorm:"not null;unique"`
+	ID       string `gorm:"primarykey"`
+	Name     string `json:"name" gorm:"not null"`
+	Username string `json:"username" gorm:"not null;unique"`
+	// BirthDate        time.Time                         `json:"birth_date" gorm:"not null"`
+	// Country          string                            `json:"country" gorm:"not null"`
 	Avatar           string                            `json:"avatar" gorm:"not null"`
 	Email            string                            `json:"email" gorm:"not null;unique"`
 	Password         string                            `json:"password" gorm:"not null"`
