@@ -9,7 +9,7 @@ type TrainingSession struct {
 	ID         string                       `json:"id" gorm:"primaryKey"`
 	UserID     string                       `json:"user_id" gorm:"not null"`
 	User       string                       `json:"user" gorm:"not null"`
-	Techniques []domain_technique.Technique `json:"technique" gorm:"not null"`
+	Techniques []domain_technique.Technique `json:"technique" gorm:"many2many:training_session_techniques"`
 	Duration   int                          `json:"duration" gorm:"not null"` // in minutes
 	Notes      string                       `json:"notes" gorm:"not null"`
 	CreatedAt  time.Time                    `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`

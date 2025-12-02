@@ -20,7 +20,9 @@ func NewTrainingHandler(createTrainingUC *application_training.CreateTrainingUse
 func (h *TrainingHandler) CreateTraining(c *gin.Context) {
 	var req application_training.CreateTrainingRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
