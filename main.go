@@ -17,12 +17,13 @@ func init() {
 	config.ConnectToDB()
 }
 
-func initUserCases() (*application_user.CreateUserUseCase, *application_user.LoginUserUseCase, *application_user.GetUserByIDUseCase, *application_user.GetAllUsersUseCase) {
+func initUserCases() (*application_user.CreateUserUseCase, *application_user.UpdateUserByIDUseCase, *application_user.LoginUserUseCase, *application_user.GetUserByIDUseCase, *application_user.GetAllUsersUseCase) {
 	createUserUC := application_user.NewCreateUserUseCase()
+	updateUserByIDUC := application_user.NewUpdateUserByIDUseCase()
 	loginUserUC := application_user.NewLoginUserUseCase()
 	getUserByIDUC := application_user.NewGetUserByIDUseCase()
 	getAllUsersUC := application_user.NewGetAllUsersUseCase()
-	return createUserUC, loginUserUC, getUserByIDUC, getAllUsersUC
+	return createUserUC, updateUserByIDUC, loginUserUC, getUserByIDUC, getAllUsersUC
 }
 
 func initUserHandler(createUserUC *application_user.CreateUserUseCase, loginUserUC *application_user.LoginUserUseCase, getUserByIDUC *application_user.GetUserByIDUseCase, getAllUsersUC *application_user.GetAllUsersUseCase) *presentation_user.UserHandler {

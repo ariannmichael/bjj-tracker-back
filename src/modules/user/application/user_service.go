@@ -34,6 +34,14 @@ func (us *UserService) CreateUser(userDTO *CreateUserRequest) (*domain_user.User
 	return newUser, nil
 }
 
+func (us *UserService) UpdateUser(user *domain_user.User) (*domain_user.User, error) {
+	updatedUser, err := us.Repo.Update(user)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update user: %w", err)
+	}
+	return updatedUser, nil
+}
+
 func (us *UserService) AddBeltProgress(user *domain_user.User, userDTO *CreateUserRequest) (*domain_user.User, error) {
 	createBeltProgressDTO := application_belt.CreateBeltProgressDTO{
 		UserID:  user.ID,

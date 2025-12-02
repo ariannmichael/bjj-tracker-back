@@ -10,18 +10,20 @@ import (
 )
 
 type UserHandler struct {
-	CreateUserUC  *application_user.CreateUserUseCase
-	LoginUserUC   *application_user.LoginUserUseCase
-	GetUserByIDUC *application_user.GetUserByIDUseCase
-	GetAllUsersUC *application_user.GetAllUsersUseCase
+	CreateUserUC     *application_user.CreateUserUseCase
+	UpdateUserByIDUC *application_user.UpdateUserByIDUseCase
+	LoginUserUC      *application_user.LoginUserUseCase
+	GetUserByIDUC    *application_user.GetUserByIDUseCase
+	GetAllUsersUC    *application_user.GetAllUsersUseCase
 }
 
-func NewUserHandler(createUserUC *application_user.CreateUserUseCase, loginUserUC *application_user.LoginUserUseCase, getUserByIDUC *application_user.GetUserByIDUseCase, getAllUsersUC *application_user.GetAllUsersUseCase) *UserHandler {
+func NewUserHandler(createUserUC *application_user.CreateUserUseCase, updateUserByIDUC *application_user.UpdateUserByIDUseCase, loginUserUC *application_user.LoginUserUseCase, getUserByIDUC *application_user.GetUserByIDUseCase, getAllUsersUC *application_user.GetAllUsersUseCase) *UserHandler {
 	return &UserHandler{
-		CreateUserUC:  createUserUC,
-		LoginUserUC:   loginUserUC,
-		GetUserByIDUC: getUserByIDUC,
-		GetAllUsersUC: getAllUsersUC,
+		CreateUserUC:     createUserUC,
+		UpdateUserByIDUC: updateUserByIDUC,
+		LoginUserUC:      loginUserUC,
+		GetUserByIDUC:    getUserByIDUC,
+		GetAllUsersUC:    getAllUsersUC,
 	}
 }
 
@@ -53,6 +55,30 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"user": user})
+}
+
+func (h *UserHandler) UpdateUserByID(c *gin.Context) {
+	userID := c.Param("id")
+	var req struct {
+		Name       string `json:"name" binding:"required"`
+		Username   string `json:"username" binding:"required"`
+		Email      string `json:"email" binding:"required,email"`
+		Password   string `json:"password" binding:"required,min=6"`
+		BeltColor  string `json:"belt_color" binding:"required"`
+		BeltStripe int    `json:"belt_stripe" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := h.UpdateUserByIDUC.Execute(userID, req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"user": user})
+	return
 }
 
 func (h *UserHandler) LoginUser(c *gin.Context) {

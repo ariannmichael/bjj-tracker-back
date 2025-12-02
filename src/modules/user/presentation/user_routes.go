@@ -12,7 +12,7 @@ func UserRoutes(r *gin.RouterGroup, handler *UserHandler) {
 	r.GET("/user/validate", middleware.RequireAuth, handler.Validate)
 	r.GET("/user/:id", middleware.RequireAuth, handler.GetUserByID)
 	r.GET("/users", middleware.RequireAuth, handler.GetAllUsers)
-	// r.PUT("/user/:id", handler.UpdateUser)
+	r.PUT("/user/:id", middleware.RequireAuth, handler.UpdateUserByID)
 	// r.DELETE("/user/:id", handler.DeleteUser)
 	// r.POST("/user/logout", handler.LogoutUser)
 	// r.POST("/user/refresh-token", handler.RefreshToken)
