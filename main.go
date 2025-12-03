@@ -26,12 +26,13 @@ func initUserCases() (*application_user.CreateUserUseCase, *application_user.Upd
 	return createUserUC, updateUserByIDUC, loginUserUC, getUserByIDUC, getAllUsersUC
 }
 
-func initUserHandler(createUserUC *application_user.CreateUserUseCase, loginUserUC *application_user.LoginUserUseCase, getUserByIDUC *application_user.GetUserByIDUseCase, getAllUsersUC *application_user.GetAllUsersUseCase) *presentation_user.UserHandler {
+func initUserHandler(createUserUC *application_user.CreateUserUseCase, updateUserByIDUC *application_user.UpdateUserByIDUseCase, loginUserUC *application_user.LoginUserUseCase, getUserByIDUC *application_user.GetUserByIDUseCase, getAllUsersUC *application_user.GetAllUsersUseCase) *presentation_user.UserHandler {
 	return &presentation_user.UserHandler{
-		CreateUserUC:  createUserUC,
-		LoginUserUC:   loginUserUC,
-		GetUserByIDUC: getUserByIDUC,
-		GetAllUsersUC: getAllUsersUC,
+		CreateUserUC:     createUserUC,
+		UpdateUserByIDUC: updateUserByIDUC,
+		LoginUserUC:      loginUserUC,
+		GetUserByIDUC:    getUserByIDUC,
+		GetAllUsersUC:    getAllUsersUC,
 	}
 }
 
@@ -61,8 +62,8 @@ func main() {
 	router := gin.Default()
 
 	// User routes
-	createUserUC, loginUserUC, getUserByIDUC, getAllUsersUC := initUserCases()
-	userHandler := initUserHandler(createUserUC, loginUserUC, getUserByIDUC, getAllUsersUC)
+	createUserUC, updateUserByIDUC, loginUserUC, getUserByIDUC, getAllUsersUC := initUserCases()
+	userHandler := initUserHandler(createUserUC, updateUserByIDUC, loginUserUC, getUserByIDUC, getAllUsersUC)
 	presentation_user.UserRoutes(router.Group("/api"), userHandler)
 
 	// Training routes

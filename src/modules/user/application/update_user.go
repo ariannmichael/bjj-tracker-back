@@ -1,11 +1,11 @@
 package application_user
 
 import (
-	"bjj-tracker-monorepo/bjj-tracker/config"
-	infrastructure_belt "bjj-tracker-monorepo/bjj-tracker/src/modules/belt/infrastructure"
-	infrastructure_user "bjj-tracker-monorepo/bjj-tracker/src/modules/user/infrastructure"
+	"bjj-tracker/config"
 	application_belt "bjj-tracker/src/modules/belt/application"
+	infrastructure_belt "bjj-tracker/src/modules/belt/infrastructure"
 	domain_user "bjj-tracker/src/modules/user/domain"
+	infrastructure_user "bjj-tracker/src/modules/user/infrastructure"
 	"fmt"
 )
 
@@ -36,8 +36,6 @@ func (uc *UpdateUserByIDUseCase) Execute(userID string, req UpdateUserByIDReques
 	user.Username = req.Username
 	user.Email = req.Email
 	user.Password = req.Password
-	user.BeltColor = req.BeltColor
-	user.BeltStripe = req.BeltStripe
 
 	newUser, err := uc.UserService.UpdateUser(user)
 	if err != nil {
@@ -46,5 +44,25 @@ func (uc *UpdateUserByIDUseCase) Execute(userID string, req UpdateUserByIDReques
 	if newUser == nil {
 		return nil, fmt.Errorf("failed to update user: user is nil")
 	}
+
+	// Update belt progress if provided
+	if req.BeltColor != "" && req.BeltStripe >= 0 {
+		createBeltProgressDTO := application_belt.CreateBeltProgressDTO{
+			UserID:  newUser.ID,
+			Color:   req.BeltColor,
+			Stripes: req.BeltStripe,
+		}
+		beltProgress, err := uc.UserService.BeltService.CreateBeltProgress(createBeltProgressDTO)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create belt progress: %w", err)
+		}
+		newUser.BeltProgress = append(newUser.BeltProgress, *beltProgress)
+		updatedUser, err := uc.Repo.Update(newUser)
+		if err != nil {
+			return nil, fmt.Errorf("failed to update user with belt progress: %w", err)
+		}
+		return updatedUser, nil
+	}
+
 	return newUser, nil
 }

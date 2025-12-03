@@ -24,7 +24,7 @@ func (r *TechniqueRepositoryImpl) Create(technique *domain_technique.Technique) 
 	technique.ID = uuid.New().String()
 
 	if err := r.DB.Create(technique).Error; err != nil {
-		return nil, fmt.Errorf("REPO failed to create technique: %w")
+		return nil, fmt.Errorf("REPO failed to create technique: %w", err)
 	}
 
 	return technique, nil
