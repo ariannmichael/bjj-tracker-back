@@ -1,9 +1,9 @@
 package application_technique
 
 import (
-	"bjj-tracker/config"
-	domain_technique "bjj-tracker/src/modules/technique/domain"
-	infrastructure_technique "bjj-tracker/src/modules/technique/infrastructure"
+	"jiu-tracker/config"
+	domain_technique "jiu-tracker/src/modules/technique/domain"
+	infrastructure_technique "jiu-tracker/src/modules/technique/infrastructure"
 )
 
 type CreateTechniqueUseCase struct {
@@ -14,12 +14,12 @@ type CreateTechniqueUseCase struct {
 func NewCreateTechniqueUseCase() *CreateTechniqueUseCase {
 	db := config.ConnectToDB()
 	repo := &infrastructure_technique.TechniqueRepositoryImpl{DB: db}
-	techniqueService := NewTechniqueService(repo)
+	return NewCreateTechniqueUseCaseWithDeps(repo)
+}
 
-	return &CreateTechniqueUseCase{
-		Repo:             repo,
-		TechniqueService: techniqueService,
-	}
+func NewCreateTechniqueUseCaseWithDeps(repo domain_technique.TechniqueRepository) *CreateTechniqueUseCase {
+	techniqueService := NewTechniqueService(repo)
+	return &CreateTechniqueUseCase{Repo: repo, TechniqueService: techniqueService}
 }
 
 func (uc *CreateTechniqueUseCase) Execute(req CreateTechniqueRequest) (*domain_technique.Technique, error) {

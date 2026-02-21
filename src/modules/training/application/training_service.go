@@ -1,8 +1,8 @@
 package application_training
 
 import (
-	application_technique "bjj-tracker/src/modules/technique/application"
-	domain_training "bjj-tracker/src/modules/training/domain"
+	application_technique "jiu-tracker/src/modules/technique/application"
+	domain_training "jiu-tracker/src/modules/training/domain"
 )
 
 type TrainingService struct {

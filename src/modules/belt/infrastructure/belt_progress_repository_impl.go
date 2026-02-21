@@ -1,7 +1,7 @@
 package infrastructure_belt
 
 import (
-	domain_belt "bjj-tracker/src/modules/belt/domain"
+	domain_belt "jiu-tracker/src/modules/belt/domain"
 
 	"gorm.io/gorm"
 )

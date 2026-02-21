@@ -1,7 +1,7 @@
 package presentation_user
 
 import (
-	application_user "bjj-tracker/src/modules/user/application"
+	application_user "jiu-tracker/src/modules/user/application"
 
 	"net/http"
 

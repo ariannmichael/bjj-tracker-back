@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	application_technique "bjj-tracker/src/modules/technique/application"
-	application_training "bjj-tracker/src/modules/training/application"
-	domain_technique "bjj-tracker/src/modules/technique/domain"
-	domain_training "bjj-tracker/src/modules/training/domain"
+	application_technique "jiu-tracker/src/modules/technique/application"
+	application_training "jiu-tracker/src/modules/training/application"
+	domain_technique "jiu-tracker/src/modules/technique/domain"
+	domain_training "jiu-tracker/src/modules/training/domain"
 )
 
 // MockTechniqueRepositoryForTraining is a mock technique repository for training tests
@@ -59,6 +59,10 @@ func (m *MockTechniqueRepositoryForTraining) FindAll() ([]domain_technique.Techn
 	return nil, nil
 }
 
+func (m *MockTechniqueRepositoryForTraining) FindAllList() ([]domain_technique.TechniqueListEntry, error) {
+	return nil, nil
+}
+
 func TestCreateTrainingUseCase_Execute(t *testing.T) {
 	tests := []struct {
 		name      string
@@ -69,10 +73,13 @@ func TestCreateTrainingUseCase_Execute(t *testing.T) {
 		{
 			name: "successful creation",
 			request: application_training.CreateTrainingRequest{
-				UserID:       "test-user-id",
-				TechniqueIDs: []string{"tech-1", "tech-2"},
-				Duration:     60,
-				Notes:        "Great training session",
+				UserID:                "test-user-id",
+				Date:                  "2025-01-15",
+				IsOpenMat:             false,
+				SubmitUsingOptionsIDs:  []string{"tech-1", "tech-2"},
+				SubmittedByOptionsIDs: []string{"tech-1"},
+				Duration:              60,
+				Notes:                 "Great training session",
 			},
 			setupMock: func(tr *MockTrainingRepository, trr *MockTechniqueRepositoryForTraining) {
 				trr.techniques["tech-1"] = &domain_technique.Technique{ID: "tech-1", Name: "Armbar"}
@@ -83,10 +90,13 @@ func TestCreateTrainingUseCase_Execute(t *testing.T) {
 		{
 			name: "technique service error",
 			request: application_training.CreateTrainingRequest{
-				UserID:       "test-user-id",
-				TechniqueIDs: []string{"tech-1"},
-				Duration:     60,
-				Notes:        "Great training session",
+				UserID:                "test-user-id",
+				Date:                  "2025-01-15",
+				IsOpenMat:             false,
+				SubmitUsingOptionsIDs:  []string{"tech-1"},
+				SubmittedByOptionsIDs: []string{"tech-1"},
+				Duration:              60,
+				Notes:                 "Great training session",
 			},
 			setupMock: func(tr *MockTrainingRepository, trr *MockTechniqueRepositoryForTraining) {
 				trr.findByIDsError = errors.New("technique not found")
@@ -96,10 +106,13 @@ func TestCreateTrainingUseCase_Execute(t *testing.T) {
 		{
 			name: "repository error",
 			request: application_training.CreateTrainingRequest{
-				UserID:       "test-user-id",
-				TechniqueIDs: []string{"tech-1"},
-				Duration:     60,
-				Notes:        "Great training session",
+				UserID:                "test-user-id",
+				Date:                  "2025-01-15",
+				IsOpenMat:             false,
+				SubmitUsingOptionsIDs:  []string{"tech-1"},
+				SubmittedByOptionsIDs: []string{"tech-1"},
+				Duration:              60,
+				Notes:                 "Great training session",
 			},
 			setupMock: func(tr *MockTrainingRepository, trr *MockTechniqueRepositoryForTraining) {
 				trr.techniques["tech-1"] = &domain_technique.Technique{ID: "tech-1", Name: "Armbar"}
@@ -281,16 +294,21 @@ func TestUpdateTrainingUseCase_Execute(t *testing.T) {
 			name: "successful update",
 			id:   "test-training-id",
 			request: application_training.UpdateTrainingRequest{
-				TechniqueIDs: []string{"tech-1", "tech-2"},
-				Duration:     90,
-				Notes:        "Updated notes",
+				Date:                  "2025-01-16",
+				IsOpenMat:             true,
+				SubmitUsingOptionsIDs: []string{"tech-1", "tech-2"},
+				SubmittedByOptionsIDs: []string{"tech-1"},
+				Duration:              90,
+				Notes:                 "Updated notes",
 			},
 			setupMock: func(tr *MockTrainingRepository, trr *MockTechniqueRepositoryForTraining) {
 				tr.trainingSessions["test-training-id"] = &domain_training.TrainingSession{
-					ID:       "test-training-id",
-					UserID:   "test-user-id",
-					Duration: 60,
-					Notes:    "Old notes",
+					ID:         "test-training-id",
+					UserID:     "test-user-id",
+					Date:       "2025-01-15",
+					IsOpenMat:  false,
+					Duration:   60,
+					Notes:      "Old notes",
 				}
 				trr.techniques["tech-1"] = &domain_technique.Technique{ID: "tech-1", Name: "Armbar"}
 				trr.techniques["tech-2"] = &domain_technique.Technique{ID: "tech-2", Name: "Triangle"}
@@ -301,9 +319,12 @@ func TestUpdateTrainingUseCase_Execute(t *testing.T) {
 			name: "training not found",
 			id:   "non-existent",
 			request: application_training.UpdateTrainingRequest{
-				TechniqueIDs: []string{"tech-1"},
-				Duration:     90,
-				Notes:        "Updated notes",
+				Date:                  "2025-01-16",
+				IsOpenMat:             false,
+				SubmitUsingOptionsIDs: []string{"tech-1"},
+				SubmittedByOptionsIDs: []string{"tech-1"},
+				Duration:              90,
+				Notes:                 "Updated notes",
 			},
 			setupMock: func(tr *MockTrainingRepository, trr *MockTechniqueRepositoryForTraining) {},
 			wantError: true,
@@ -312,15 +333,20 @@ func TestUpdateTrainingUseCase_Execute(t *testing.T) {
 			name: "technique service error",
 			id:   "test-training-id",
 			request: application_training.UpdateTrainingRequest{
-				TechniqueIDs: []string{"tech-1"},
-				Duration:     90,
-				Notes:        "Updated notes",
+				Date:                  "2025-01-16",
+				IsOpenMat:             false,
+				SubmitUsingOptionsIDs: []string{"tech-1"},
+				SubmittedByOptionsIDs: []string{"tech-1"},
+				Duration:              90,
+				Notes:                 "Updated notes",
 			},
 			setupMock: func(tr *MockTrainingRepository, trr *MockTechniqueRepositoryForTraining) {
 				tr.trainingSessions["test-training-id"] = &domain_training.TrainingSession{
-					ID:       "test-training-id",
-					UserID:   "test-user-id",
-					Duration: 60,
+					ID:        "test-training-id",
+					UserID:    "test-user-id",
+					Date:      "2025-01-15",
+					IsOpenMat: false,
+					Duration:  60,
 				}
 				trr.findByIDsError = errors.New("technique not found")
 			},
@@ -330,15 +356,20 @@ func TestUpdateTrainingUseCase_Execute(t *testing.T) {
 			name: "repository update error",
 			id:   "test-training-id",
 			request: application_training.UpdateTrainingRequest{
-				TechniqueIDs: []string{"tech-1"},
-				Duration:     90,
-				Notes:        "Updated notes",
+				Date:                  "2025-01-16",
+				IsOpenMat:             false,
+				SubmitUsingOptionsIDs: []string{"tech-1"},
+				SubmittedByOptionsIDs: []string{"tech-1"},
+				Duration:              90,
+				Notes:                 "Updated notes",
 			},
 			setupMock: func(tr *MockTrainingRepository, trr *MockTechniqueRepositoryForTraining) {
 				tr.trainingSessions["test-training-id"] = &domain_training.TrainingSession{
-					ID:       "test-training-id",
-					UserID:   "test-user-id",
-					Duration: 60,
+					ID:        "test-training-id",
+					UserID:    "test-user-id",
+					Date:      "2025-01-15",
+					IsOpenMat: false,
+					Duration:  60,
 				}
 				trr.techniques["tech-1"] = &domain_technique.Technique{ID: "tech-1", Name: "Armbar"}
 				tr.updateError = errors.New("database error")

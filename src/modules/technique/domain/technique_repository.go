@@ -1,5 +1,11 @@
 package domain_technique
 
+type TechniqueListEntry struct {
+	ID             string `json:"id"`
+	Name           string `json:"name"`
+	NamePortuguese string `json:"name_portuguese"`
+}
+
 type TechniqueRepository interface {
 	Create(technique *Technique) (*Technique, error)
 	Update(technique *Technique) (*Technique, error)
@@ -8,4 +14,5 @@ type TechniqueRepository interface {
 	FindByCategory(category Category) ([]Technique, error)
 	FindByDifficulty(difficulty Difficulty) ([]Technique, error)
 	FindAll() ([]Technique, error)
+	FindAllList() ([]TechniqueListEntry, error)
 }

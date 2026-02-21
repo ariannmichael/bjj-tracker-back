@@ -1,7 +1,7 @@
 package application_technique
 
 import (
-	domain_technique "bjj-tracker/src/modules/technique/domain"
+	domain_technique "jiu-tracker/src/modules/technique/domain"
 )
 
 type GetAllTechniquesUseCase struct {

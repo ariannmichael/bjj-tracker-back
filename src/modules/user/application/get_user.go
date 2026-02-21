@@ -1,11 +1,11 @@
 package application_user
 
 import (
-	"bjj-tracker/config"
-	application_belt "bjj-tracker/src/modules/belt/application"
-	infrastructure_belt "bjj-tracker/src/modules/belt/infrastructure"
-	domain_user "bjj-tracker/src/modules/user/domain"
-	infrastructure_user "bjj-tracker/src/modules/user/infrastructure"
+	"jiu-tracker/config"
+	application_belt "jiu-tracker/src/modules/belt/application"
+	infrastructure_belt "jiu-tracker/src/modules/belt/infrastructure"
+	domain_user "jiu-tracker/src/modules/user/domain"
+	infrastructure_user "jiu-tracker/src/modules/user/infrastructure"
 	"fmt"
 )
 

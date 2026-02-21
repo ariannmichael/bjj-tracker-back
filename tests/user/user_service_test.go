@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	application_belt "bjj-tracker/src/modules/belt/application"
-	application_user "bjj-tracker/src/modules/user/application"
-	domain_belt "bjj-tracker/src/modules/belt/domain"
-	domain_user "bjj-tracker/src/modules/user/domain"
+	application_belt "jiu-tracker/src/modules/belt/application"
+	application_user "jiu-tracker/src/modules/user/application"
+	domain_belt "jiu-tracker/src/modules/belt/domain"
+	domain_user "jiu-tracker/src/modules/user/domain"
 )
 
 // MockUserRepository is a mock implementation of UserRepository

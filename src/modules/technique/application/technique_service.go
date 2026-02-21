@@ -1,6 +1,6 @@
 package application_technique
 
-import domain_technique "bjj-tracker/src/modules/technique/domain"
+import domain_technique "jiu-tracker/src/modules/technique/domain"
 
 type TechniqueService struct {
 	Repo domain_technique.TechniqueRepository
@@ -78,4 +78,8 @@ func (ts *TechniqueService) GetAllTechniques() ([]*domain_technique.Technique, e
 		techniquePtrs[i] = &techniques[i]
 	}
 	return techniquePtrs, nil
+}
+
+func (ts *TechniqueService) GetTechniquesList() ([]domain_technique.TechniqueListEntry, error) {
+	return ts.Repo.FindAllList()
 }

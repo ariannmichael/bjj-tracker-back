@@ -1,7 +1,7 @@
 package presentation_user
 
 import (
-	"bjj-tracker/middleware"
+	"jiu-tracker/middleware"
 
 	"github.com/gin-gonic/gin"
 )

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	application_technique "bjj-tracker/src/modules/technique/application"
-	domain_technique "bjj-tracker/src/modules/technique/domain"
+	application_technique "jiu-tracker/src/modules/technique/application"
+	domain_technique "jiu-tracker/src/modules/technique/domain"
 )
 
 func TestCreateTechniqueUseCase_Execute(t *testing.T) {

@@ -1,14 +1,17 @@
 package main
 
 import (
-	"bjj-tracker/config"
-	application_technique "bjj-tracker/src/modules/technique/application"
-	presentation_technique "bjj-tracker/src/modules/technique/presentation"
-	application_training "bjj-tracker/src/modules/training/application"
-	presentation_training "bjj-tracker/src/modules/training/presentation"
-	application_user "bjj-tracker/src/modules/user/application"
-	presentation_user "bjj-tracker/src/modules/user/presentation"
+	"jiu-tracker/config"
+	application_technique "jiu-tracker/src/modules/technique/application"
+	infrastructure_technique "jiu-tracker/src/modules/technique/infrastructure"
+	presentation_technique "jiu-tracker/src/modules/technique/presentation"
+	application_training "jiu-tracker/src/modules/training/application"
+	infrastructure_training "jiu-tracker/src/modules/training/infrastructure"
+	presentation_training "jiu-tracker/src/modules/training/presentation"
+	application_user "jiu-tracker/src/modules/user/application"
+	presentation_user "jiu-tracker/src/modules/user/presentation"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,30 +39,57 @@ func initUserHandler(createUserUC *application_user.CreateUserUseCase, updateUse
 	}
 }
 
-func initTrainingCases() *application_training.CreateTrainingUseCase {
-	createTrainingUC := application_training.NewCreateTrainingUseCase()
-	return createTrainingUC
+func initTrainingHandler() *presentation_training.TrainingHandler {
+	db := config.DB
+	trainingRepo := &infrastructure_training.TrainingRepositoryImpl{DB: db}
+	techniqueRepo := &infrastructure_technique.TechniqueRepositoryImpl{DB: db}
+	techniqueService := application_technique.NewTechniqueService(techniqueRepo)
+
+	createTrainingUC := application_training.NewCreateTrainingUseCaseWithDeps(trainingRepo, techniqueService)
+	getTrainingByIDUC := application_training.NewGetTrainingByIDUseCase(trainingRepo)
+	getAllTrainingsUC := application_training.NewGetAllTrainingsUseCase(trainingRepo)
+	updateTrainingUC := application_training.NewUpdateTrainingUseCase(trainingRepo, techniqueService)
+	deleteTrainingUC := application_training.NewDeleteTrainingUseCase(trainingRepo)
+
+	return presentation_training.NewTrainingHandler(
+		createTrainingUC,
+		getTrainingByIDUC,
+		getAllTrainingsUC,
+		updateTrainingUC,
+		deleteTrainingUC,
+	)
 }
 
-func initTrainingHandler(createTrainingUC *application_training.CreateTrainingUseCase) *presentation_training.TrainingHandler {
-	return &presentation_training.TrainingHandler{
-		CreateTrainingUC: createTrainingUC,
-	}
-}
+func initTechniqueHandler() *presentation_technique.TechniqueHandler {
+	db := config.DB
+	techniqueRepo := &infrastructure_technique.TechniqueRepositoryImpl{DB: db}
 
-func initTechniqueCases() *application_technique.CreateTechniqueUseCase {
-	createTechniqueUC := application_technique.NewCreateTechniqueUseCase()
-	return createTechniqueUC
-}
+	createTechniqueUC := application_technique.NewCreateTechniqueUseCaseWithDeps(techniqueRepo)
+	getTechniqueByIDUC := application_technique.NewGetTechniqueByIDUseCase(techniqueRepo)
+	getAllTechniquesUC := application_technique.NewGetAllTechniquesUseCase(techniqueRepo)
+	getTechniquesListUC := application_technique.NewGetTechniquesListUseCase(techniqueRepo)
+	updateTechniqueUC := application_technique.NewUpdateTechniqueUseCase(techniqueRepo)
 
-func initTechniqueHandler(createTechniqueUC *application_technique.CreateTechniqueUseCase) *presentation_technique.TechniqueHandler {
-	return &presentation_technique.TechniqueHandler{
-		CreateTechniqueUC: createTechniqueUC,
-	}
+	return presentation_technique.NewTechniqueHandler(
+		createTechniqueUC,
+		updateTechniqueUC,
+		getTechniqueByIDUC,
+		getAllTechniquesUC,
+		getTechniquesListUC,
+	)
 }
 
 func main() {
 	router := gin.Default()
+
+	// CORS: allow frontend at localhost:8081 (and preflight)
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:8081"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	// User routes
 	createUserUC, updateUserByIDUC, loginUserUC, getUserByIDUC, getAllUsersUC := initUserCases()
@@ -67,13 +97,11 @@ func main() {
 	presentation_user.UserRoutes(router.Group("/api"), userHandler)
 
 	// Training routes
-	createTrainingUC := initTrainingCases()
-	trainingHandler := initTrainingHandler(createTrainingUC)
+	trainingHandler := initTrainingHandler()
 	presentation_training.TrainingRoutes(router.Group("/api"), trainingHandler)
 
 	// Technique routes
-	createTechniqueUC := initTechniqueCases()
-	techniqueHandler := initTechniqueHandler(createTechniqueUC)
+	techniqueHandler := initTechniqueHandler()
 	presentation_technique.TechniqueRoutes(router.Group("/api"), techniqueHandler)
 
 	router.Run()

@@ -1,7 +1,7 @@
 package application_training
 
 import (
-	domain_training "bjj-tracker/src/modules/training/domain"
+	domain_training "jiu-tracker/src/modules/training/domain"
 	"fmt"
 )
 

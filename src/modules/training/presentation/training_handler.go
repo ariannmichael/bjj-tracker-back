@@ -1,7 +1,7 @@
 package presentation_training
 
 import (
-	application_training "bjj-tracker/src/modules/training/application"
+	application_training "jiu-tracker/src/modules/training/application"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

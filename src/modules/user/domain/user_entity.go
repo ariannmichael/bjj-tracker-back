@@ -1,8 +1,8 @@
 package domain_user
 
 import (
-	domain_belt "bjj-tracker/src/modules/belt/domain"
-	domain_training "bjj-tracker/src/modules/training/domain"
+	domain_belt "jiu-tracker/src/modules/belt/domain"
+	domain_training "jiu-tracker/src/modules/training/domain"
 	"time"
 )
 

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	application_technique "bjj-tracker/src/modules/technique/application"
-	application_training "bjj-tracker/src/modules/training/application"
-	domain_technique "bjj-tracker/src/modules/technique/domain"
-	domain_training "bjj-tracker/src/modules/training/domain"
+	application_technique "jiu-tracker/src/modules/technique/application"
+	application_training "jiu-tracker/src/modules/training/application"
+	domain_technique "jiu-tracker/src/modules/technique/domain"
+	domain_training "jiu-tracker/src/modules/training/domain"
 )
 
 // MockTrainingRepository is a mock implementation of TrainingRepository

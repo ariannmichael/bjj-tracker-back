@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	application_technique "bjj-tracker/src/modules/technique/application"
-	domain_technique "bjj-tracker/src/modules/technique/domain"
+	application_technique "jiu-tracker/src/modules/technique/application"
+	domain_technique "jiu-tracker/src/modules/technique/domain"
 )
 
 // MockTechniqueRepository is a mock implementation of TechniqueRepository
@@ -107,6 +107,25 @@ func (m *MockTechniqueRepository) FindAll() ([]domain_technique.Technique, error
 	var result []domain_technique.Technique
 	for _, technique := range m.techniques {
 		result = append(result, *technique)
+	}
+	return result, nil
+}
+
+func (m *MockTechniqueRepository) FindAllList() ([]domain_technique.TechniqueListEntry, error) {
+	var result []domain_technique.TechniqueListEntry
+	for _, technique := range m.techniques {
+		result = append(result, domain_technique.TechniqueListEntry{
+			ID:             technique.ID,
+			Name:           technique.Name,
+			NamePortuguese: technique.NamePortuguese,
+		})
+	}
+	for _, t := range m.allTechniques {
+		result = append(result, domain_technique.TechniqueListEntry{
+			ID:             t.ID,
+			Name:           t.Name,
+			NamePortuguese: t.NamePortuguese,
+		})
 	}
 	return result, nil
 }

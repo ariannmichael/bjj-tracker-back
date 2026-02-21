@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	application_belt "bjj-tracker/src/modules/belt/application"
-	domain_belt "bjj-tracker/src/modules/belt/domain"
+	application_belt "jiu-tracker/src/modules/belt/application"
+	domain_belt "jiu-tracker/src/modules/belt/domain"
 )
 
 // MockBeltProgressRepository is a mock implementation of BeltProgressRepository

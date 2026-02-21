@@ -1,6 +1,6 @@
 package application_technique
 
-import domain_technique "bjj-tracker/src/modules/technique/domain"
+import domain_technique "jiu-tracker/src/modules/technique/domain"
 
 type CreateTechniqueRequest struct {
 	Name                  string                      `json:"name" binding:"required"`

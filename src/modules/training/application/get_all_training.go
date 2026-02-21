@@ -1,6 +1,6 @@
 package application_training
 
-import domain_training "bjj-tracker/src/modules/training/domain"
+import domain_training "jiu-tracker/src/modules/training/domain"
 
 type GetAllTrainingsUseCase struct {
 	Repo domain_training.TrainingRepository

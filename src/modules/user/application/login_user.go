@@ -1,9 +1,9 @@
 package application_user
 
 import (
-	"bjj-tracker/config"
-	domain_user "bjj-tracker/src/modules/user/domain"
-	infrastructure_user "bjj-tracker/src/modules/user/infrastructure"
+	"jiu-tracker/config"
+	domain_user "jiu-tracker/src/modules/user/domain"
+	infrastructure_user "jiu-tracker/src/modules/user/infrastructure"
 	"fmt"
 	"os"
 	"time"

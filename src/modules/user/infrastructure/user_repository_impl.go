@@ -1,7 +1,7 @@
 package infrastructure_user
 
 import (
-	domain_user "bjj-tracker/src/modules/user/domain"
+	domain_user "jiu-tracker/src/modules/user/domain"
 	"fmt"
 
 	"github.com/google/uuid"

@@ -1,26 +1,37 @@
 package presentation_technique
 
 import (
-	application_technique "bjj-tracker/src/modules/technique/application"
+	application_technique "jiu-tracker/src/modules/technique/application"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type TechniqueHandler struct {
-	CreateTechniqueUC  *application_technique.CreateTechniqueUseCase
-	GetTechniqueByIDUC *application_technique.GetTechniqueByIDUseCase
-	GetAllTechniquesUC *application_technique.GetAllTechniquesUseCase
-	UpdateTechniqueUC  *application_technique.UpdateTechniqueUseCase
+	CreateTechniqueUC   *application_technique.CreateTechniqueUseCase
+	GetTechniqueByIDUC  *application_technique.GetTechniqueByIDUseCase
+	GetAllTechniquesUC  *application_technique.GetAllTechniquesUseCase
+	GetTechniquesListUC *application_technique.GetTechniquesListUseCase
+	UpdateTechniqueUC   *application_technique.UpdateTechniqueUseCase
 }
 
-func NewTechniqueHandler(createTechniqueUC *application_technique.CreateTechniqueUseCase, updateTechniqueUC *application_technique.UpdateTechniqueUseCase, getTechniqueByIDUC *application_technique.GetTechniqueByIDUseCase, getAllTechniquesUC *application_technique.GetAllTechniquesUseCase) *TechniqueHandler {
+func NewTechniqueHandler(createTechniqueUC *application_technique.CreateTechniqueUseCase, updateTechniqueUC *application_technique.UpdateTechniqueUseCase, getTechniqueByIDUC *application_technique.GetTechniqueByIDUseCase, getAllTechniquesUC *application_technique.GetAllTechniquesUseCase, getTechniquesListUC *application_technique.GetTechniquesListUseCase) *TechniqueHandler {
 	return &TechniqueHandler{
-		CreateTechniqueUC:  createTechniqueUC,
-		UpdateTechniqueUC:  updateTechniqueUC,
-		GetTechniqueByIDUC: getTechniqueByIDUC,
-		GetAllTechniquesUC: getAllTechniquesUC,
+		CreateTechniqueUC:   createTechniqueUC,
+		UpdateTechniqueUC:   updateTechniqueUC,
+		GetTechniqueByIDUC:  getTechniqueByIDUC,
+		GetAllTechniquesUC:  getAllTechniquesUC,
+		GetTechniquesListUC: getTechniquesListUC,
 	}
+}
+
+func (h *TechniqueHandler) GetTechniquesList(c *gin.Context) {
+	techniques, err := h.GetTechniquesListUC.Execute()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"techniques": techniques})
 }
 
 func (h *TechniqueHandler) CreateTechnique(c *gin.Context) {

@@ -1,8 +1,8 @@
 package application_training
 
 import (
-	application_technique "bjj-tracker/src/modules/technique/application"
-	domain_training "bjj-tracker/src/modules/training/domain"
+	application_technique "jiu-tracker/src/modules/technique/application"
+	domain_training "jiu-tracker/src/modules/training/domain"
 	"fmt"
 )
 
@@ -11,8 +11,8 @@ type UpdateTrainingUseCase struct {
 	TechniqueService *application_technique.TechniqueService
 }
 
-func NewUpdateTrainingUseCase(repo domain_training.TrainingRepository) *UpdateTrainingUseCase {
-	return &UpdateTrainingUseCase{Repo: repo}
+func NewUpdateTrainingUseCase(repo domain_training.TrainingRepository, techniqueService *application_technique.TechniqueService) *UpdateTrainingUseCase {
+	return &UpdateTrainingUseCase{Repo: repo, TechniqueService: techniqueService}
 }
 
 func (uc *UpdateTrainingUseCase) Execute(id string, req UpdateTrainingRequest) (*domain_training.TrainingSession, error) {
@@ -20,11 +20,18 @@ func (uc *UpdateTrainingUseCase) Execute(id string, req UpdateTrainingRequest) (
 	if err != nil {
 		return nil, fmt.Errorf("failed to find training: %w", err)
 	}
-	techniques, err := uc.TechniqueService.GetTechniquesByIDs(req.TechniqueIDs)
+	submitUsing, err := uc.TechniqueService.GetTechniquesByIDs(req.SubmitUsingOptionsIDs)
 	if err != nil {
-		return nil, fmt.Errorf("failed to find techniques: %w", err)
+		return nil, fmt.Errorf("failed to find submit-using techniques: %w", err)
 	}
-	training.Techniques = techniques
+	submittedBy, err := uc.TechniqueService.GetTechniquesByIDs(req.SubmittedByOptionsIDs)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find submitted-by techniques: %w", err)
+	}
+	training.Date = req.Date
+	training.IsOpenMat = req.IsOpenMat
+	training.SubmitUsingOptions = submitUsing
+	training.SubmittedByOptions = submittedBy
 	training.Duration = req.Duration
 	training.Notes = req.Notes
 	newTraining, err := uc.Repo.UpdateTrainingSession(training)

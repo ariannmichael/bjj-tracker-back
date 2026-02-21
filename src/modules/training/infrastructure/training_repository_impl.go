@@ -1,7 +1,7 @@
 package infrastructure_training
 
 import (
-	domain_training "bjj-tracker/src/modules/training/domain"
+	domain_training "jiu-tracker/src/modules/training/domain"
 
 	"gorm.io/gorm"
 
@@ -25,7 +25,7 @@ func (r *TrainingRepositoryImpl) CreateTrainingSession(trainingSession *domain_t
 
 func (r *TrainingRepositoryImpl) GetTrainingSessionByID(id string) (*domain_training.TrainingSession, error) {
 	var trainingSession domain_training.TrainingSession
-	if err := r.DB.First(&trainingSession, "id = ?", id).Error; err != nil {
+	if err := r.DB.Preload("SubmitUsingOptions").Preload("SubmittedByOptions").First(&trainingSession, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &trainingSession, nil
@@ -33,14 +33,14 @@ func (r *TrainingRepositoryImpl) GetTrainingSessionByID(id string) (*domain_trai
 
 func (r *TrainingRepositoryImpl) GetAllTrainingSessions() ([]domain_training.TrainingSession, error) {
 	var trainingSessions []domain_training.TrainingSession
-	if err := r.DB.Find(&trainingSessions).Error; err != nil {
+	if err := r.DB.Preload("SubmitUsingOptions").Preload("SubmittedByOptions").Find(&trainingSessions).Error; err != nil {
 		return nil, err
 	}
 	return trainingSessions, nil
 }
 
 func (r *TrainingRepositoryImpl) UpdateTrainingSession(trainingSession *domain_training.TrainingSession) (*domain_training.TrainingSession, error) {
-	if err := r.DB.Save(trainingSession).Error; err != nil {
+	if err := r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Save(trainingSession).Error; err != nil {
 		return nil, err
 	}
 	return trainingSession, nil

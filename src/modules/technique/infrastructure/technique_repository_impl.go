@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 
-	domain_technique "bjj-tracker/src/modules/technique/domain"
+	domain_technique "jiu-tracker/src/modules/technique/domain"
 )
 
 type TechniqueRepositoryImpl struct {
@@ -75,4 +75,12 @@ func (r *TechniqueRepositoryImpl) FindAll() ([]domain_technique.Technique, error
 		return nil, fmt.Errorf("REPO failed to find techniques: %w", err)
 	}
 	return techniques, nil
+}
+
+func (r *TechniqueRepositoryImpl) FindAllList() ([]domain_technique.TechniqueListEntry, error) {
+	var entries []domain_technique.TechniqueListEntry
+	if err := r.DB.Model(&domain_technique.Technique{}).Select("id", "name", "name_portuguese").Find(&entries).Error; err != nil {
+		return nil, fmt.Errorf("REPO failed to find techniques list: %w", err)
+	}
+	return entries, nil
 }
